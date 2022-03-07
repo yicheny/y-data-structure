@@ -5,6 +5,6 @@ export default class DummyClass {
   private name: string
 
   constructor() {
-    this.name = '111'
+    this.name = 'test'
   }
 }
