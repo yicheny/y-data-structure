@@ -1,11 +1,9 @@
-type BinNodePosi<T> = BinNode<T>
+export type BinNodePosi<T> = BinNode<T>
 
 enum RB_COLOR {
   RB_RED,
   RB_BLACK
 }
-
-type Nullable<T> = T | null
 
 interface Props<T> {
   e: T
@@ -17,34 +15,104 @@ interface Props<T> {
   c?: RB_COLOR
 }
 
-class BinNode<T> {
-  //成员属性
-  private data: T
-  public parent: Nullable<BinNodePosi<T>>
-  public lc: Nullable<BinNodePosi<T>>
-  public rc: Nullable<BinNodePosi<T>>
-  public height: number
-  private npl: number
-  private color: RB_COLOR
+export class BinNode<T> {
+  // 成员属性
+  private _data: T
+  private readonly _parent: Nullable<BinNodePosi<T>>
+  private _lc: Nullable<BinNodePosi<T>>
+  private _rc: Nullable<BinNodePosi<T>>
+  private _height: number
+  private _npl: number
+  private _color: RB_COLOR
 
-  //构造函数
+  // 构造函数
   constructor(props: Props<T>) {
     const { e, p = null, lc = null, rc = null, height = 0, npl = 0, c = RB_COLOR.RB_RED } = props
-    this.data = e
-    this.parent = p
-    this.lc = lc
-    this.rc = rc
-    this.height = height
-    this.npl = npl
-    this.color = c
+    this._data = e
+    this._parent = p
+    this._lc = lc
+    this._rc = rc
+    this._height = height
+    this._npl = npl
+    this._color = c
+  }
+
+  // --------------修改相关-------------
+  insertAsLC(e: T): BinNodePosi<T> {
+    return (this._lc = new BinNode<T>({ e, p: this }))
+  }
+
+  insertAsRC(e: T): BinNodePosi<T> {
+    return (this._rc = new BinNode<T>({ e, p: this }))
+  }
+
+  // --------------查询相关--------------
+  isRoot() {
+    return this._parent === null
+  }
+
+  isLChild() {
+    return !this.isRoot() && this === this._parent?._lc
+  }
+
+  isRChild() {
+    return !this.isRoot() && this === this._parent?._rc
+  }
+
+  hasParent() {
+    return !this.isRoot()
+  }
+
+  hasLChild() {
+    return this._lc
+  }
+
+  hasRChild() {
+    return this._rc
+  }
+
+  hasChild() {
+    return this.hasLChild() || this.hasRChild()
+  }
+
+  hasBothChild() {
+    return this.hasLChild() && this.hasRChild()
+  }
+
+  isLeaf() {
+    return !this.hasChild()
+  }
+
+  sibling() {
+    return this.isLChild() ? this._parent?._rc : this._parent?._lc
+  }
+
+  uncle() {
+    return this.isLChild() ? this._parent?._parent?._rc : this._parent?._parent?._lc
+  }
+
+  //--------------Bean相关--------------
+  getHeight() {
+    return this._height
+  }
+
+  setHeight(x: number) {
+    this._height = x
+  }
+
+  getLC() {
+    return this._lc
+  }
+
+  getRC() {
+    return this._lc
+  }
+
+  getParent() {
+    return this._parent
   }
 }
 
-//一些常用操作
-function isRoot<T>(x: BinNode<T>) {
-  return x.parent !== null
-}
-
-function isLChild<T>(x: BinNode<T>) {
-  return isRoot<T>(x) && x === x.parent?.lc
+export function getHeight<T>(x: Nullable<BinNode<T>>) {
+  return x ? x.getHeight() : -1
 }
