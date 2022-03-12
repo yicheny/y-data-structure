@@ -1,4 +1,4 @@
-export type BinNodePosi<T> = BinNode<T>
+export type BinNodePosi<T> = Voidable<BinNode<T>>
 
 enum RB_COLOR {
   RB_RED,
@@ -18,9 +18,9 @@ interface Props<T> {
 export class BinNode<T> {
   // 成员属性
   private _data: T
-  private readonly _parent: Nullable<BinNodePosi<T>>
-  private _lc: Nullable<BinNodePosi<T>>
-  private _rc: Nullable<BinNodePosi<T>>
+  private _parent: BinNodePosi<T>
+  private _lc: BinNodePosi<T>
+  private _rc: BinNodePosi<T>
   private _height: number
   private _npl: number
   private _color: RB_COLOR
@@ -91,6 +91,13 @@ export class BinNode<T> {
     return this.isLChild() ? this._parent?._parent?._rc : this._parent?._parent?._lc
   }
 
+  //修改父节点关联关系
+  setFormParentTo(x: BinNodePosi<T>) {
+    if (this.isRoot()) return null
+    if (this.isLChild()) return this.setLC(x)
+    return this.setRC(x)
+  }
+
   //--------------Bean相关--------------
   getHeight() {
     return this._height
@@ -104,15 +111,31 @@ export class BinNode<T> {
     return this._lc
   }
 
+  setLC(x: BinNodePosi<T>) {
+    this._lc = x
+  }
+
   getRC() {
     return this._lc
+  }
+
+  setRC(x: BinNodePosi<T>) {
+    this._rc = x
   }
 
   getParent() {
     return this._parent
   }
+
+  setParent(x: BinNodePosi<T>) {
+    this._parent = x
+  }
+
+  getData() {
+    return this._data
+  }
 }
 
-export function getHeight<T>(x: Nullable<BinNode<T>>) {
+export function getHeight<T>(x: BinNodePosi<T>) {
   return x ? x.getHeight() : -1
 }
