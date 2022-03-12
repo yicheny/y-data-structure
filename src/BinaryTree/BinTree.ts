@@ -1,6 +1,6 @@
 import { BinNode, BinNodePosi, getHeight } from './BinNode'
 
-class BinTree<T> {
+export class BinTree<T> {
   protected _size: number
   protected _root: Nullable<BinNodePosi<T>>
 
@@ -10,11 +10,11 @@ class BinTree<T> {
   }
 
   // ----------------修改相关------------
-  updateHeight(x: BinNodePosi<T>) {
+  private updateHeight(x: BinNodePosi<T>) {
     x.setHeight(1 + Math.max(getHeight(x.getLC()), getHeight(x.getRC())))
   }
 
-  updateHeightAbove(x: Nullable<BinNodePosi<T>>) {
+  private updateHeightAbove(x: Nullable<BinNodePosi<T>>) {
     while (x) {
       this.updateHeight(x)
       x = x.getParent()
