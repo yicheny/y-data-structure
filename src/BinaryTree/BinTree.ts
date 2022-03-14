@@ -1,4 +1,5 @@
 import { BinNode, BinNodePosi, getHeight } from './BinNode'
+import { Stack } from '../Stack/Stack'
 
 type Visit<T> = (data: T) => void
 
@@ -93,6 +94,67 @@ export class BinTree<T> {
     visit(x.getData())
     this.travPre_R(x.getLC(), visit)
     this.travPre_R(x.getRC(), visit)
+  }
+
+  //先序遍历-迭代版1
+  private travPre_I1(x: BinNodePosi<T>, visit: Visit<T>) {
+    const s = new Stack<BinNodePosi<T>>()
+    if (x) s.push(x)
+    while (!s.empty()) {
+      x = s.pop()
+      // @ts-ignore
+      visit(x.getData())
+      // @ts-ignore
+      if (x.hasRChild()) s.push(x)
+      // @ts-ignore
+      if (x.hasLChild()) s.push(x)
+    }
+  }
+
+  //先序遍历-迭代版2
+  private travPre_I2(x: BinNodePosi<T>, visit: Visit<T>) {
+    const s = new Stack<BinNodePosi<T>>()
+    while (true) {
+      this.visitAlongLeftBranch(x, visit, s)
+      if (s.empty()) break
+      x = s.pop()
+    }
+  }
+
+  private visitAlongLeftBranch(x: BinNodePosi<T>, visit: Visit<T>, s: Stack<BinNodePosi<T>>) {
+    while (x) {
+      visit(x.getData())
+      s.push(x.getRC())
+      x = x.getLC()
+    }
+  }
+
+  //中序遍历-递归
+  private travIn_R(x: BinNodePosi<T>, visit: Visit<T>) {
+    if (!x) return
+    this.travPre_R(x.getLC(), visit)
+    visit(x.getData())
+    this.travPre_R(x.getRC(), visit)
+  }
+
+  //中序迭代-迭代1
+  private travIn_I1(x: BinNodePosi<T>, visit: Visit<T>) {
+    const s = new Stack<BinNodePosi<T>>()
+    while (true) {
+      this.goAlongLeftBranch(x, s)
+      if (s.empty()) break
+      x = s.pop()
+      // @ts-ignore
+      visit(x.getData())
+      x = x?.getRC()
+    }
+  }
+
+  private goAlongLeftBranch(x: BinNodePosi<T>, s: Stack<BinNodePosi<T>>) {
+    while (x) {
+      s.push(x.getRC())
+      x = x.getLC()
+    }
   }
 
   //----------------查询相关------------

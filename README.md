@@ -6,6 +6,6 @@
 使用typescript实现数据结构：
 - [ ] `Vector` 向量
 - [ ] `List` 链表
-- [ ] `Stack` 栈
+- [x] `Stack` 栈
 - [ ] `Queen` 队列
 - [ ] `Binary Tree` 二叉树

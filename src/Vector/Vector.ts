@@ -2,7 +2,7 @@ type Rank = number
 
 export class Vector<T> {
   private _size: Rank
-  private _data: Array<T>
+  protected readonly _data: Array<T>
 
   constructor(source?: Array<T>) {
     this._size = 0
@@ -32,5 +32,18 @@ export class Vector<T> {
     return r
   }
 
-  remove() {}
+  remove(r: Rank) {
+    const x = this._data[r]
+    this._removeRank(r, r + 1)
+    return x
+  }
+
+  private _removeRank(lo: Rank, hi: Rank) {
+    if (hi <= lo) return 0
+    while (hi < this._size) {
+      this._data[lo++] = this._data[hi++]
+    }
+    this._size = lo //更新规模，丢弃尾部[lo,_size=hi)的内容--注：此时lo已增长为删除后的长度
+    return hi - lo
+  }
 }
