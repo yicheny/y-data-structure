@@ -157,6 +157,45 @@ export class BinTree<T> {
     }
   }
 
+  //中序遍历-迭代2
+  private travIn_I2(x: BinNodePosi<T>, visit: Visit<T>) {
+    const s = new Stack<BinNodePosi<T>>()
+    while (true) {
+      if (x) {
+        s.push(x)
+        x = x.getLC()
+      } else if (!s.empty()) {
+        x = s.pop()
+        // @ts-ignore
+        visit(x?.getData())
+        x = x?.getRC()
+      } else {
+        break
+      }
+    }
+  }
+
+  //中序遍历-迭代3
+  private travIn_I3(x: BinNodePosi<T>, visit: Visit<T>) {
+    let backtrack: boolean = false
+
+    while (true) {
+      if (!backtrack && x?.hasLChild()) {
+        x = x.getLC()
+      } else {
+        // @ts-ignore
+        visit(x.getData())
+        if (x?.hasRChild()) {
+          x = x.getRC()
+          backtrack = false
+        } else {
+          if (!(x = x?.succ())) break
+          backtrack = true
+        }
+      }
+    }
+  }
+
   //----------------查询相关------------
 
   size() {

@@ -91,6 +91,18 @@ export class BinNode<T> {
     return this.isLChild() ? this._parent?._parent?._rc : this._parent?._parent?._lc
   }
 
+  succ() {
+    let s: BinNodePosi<T> = this
+    if (this._rc) {
+      s = this._rc
+      while (this.hasLChild()) s = s?._lc
+    } else {
+      while (s?.isRChild()) s = s?._parent
+      s = s?._parent
+    }
+    return s
+  }
+
   //修改父节点关联关系
   setFormParentTo(x: BinNodePosi<T>) {
     if (this.isRoot()) return null
