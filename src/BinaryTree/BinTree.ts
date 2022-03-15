@@ -1,5 +1,6 @@
 import { BinNode, BinNodePosi, getHeight } from './BinNode'
 import { Stack } from '../Stack/Stack'
+import { Queue } from '../Queue/Queue'
 
 type Visit<T> = (data: T) => void
 
@@ -202,6 +203,45 @@ export class BinTree<T> {
     this.travPost_R(x.getLC(), visit)
     this.travPost_R(x.getRC(), visit)
     visit(x.getData())
+  }
+
+  //后序遍历-迭代
+  private travPost_I(x: BinNodePosi<T>, visit: Visit<T>) {
+    const s = new Stack<BinNodePosi<T>>()
+    if (x) s.push(x)
+    while (!s.empty()) {
+      if (s.top() !== x?.getParent()) this.gotoHLVFL(s)
+      x = s.pop()
+      // @ts-ignore
+      visit(x.getData())
+    }
+  }
+
+  //获取最高左侧可见叶
+  private gotoHLVFL(s: Stack<BinNodePosi<T>>) {
+    let x: BinNodePosi<T>
+    while ((x = s.top())) {
+      if (x.hasLChild()) {
+        if (x.hasRChild()) s.push(x.getRC())
+        s.push(x.getLC())
+      } else {
+        s.push(x.getRC())
+      }
+    }
+    s.pop()
+  }
+
+  //层次遍历、广度优先遍历
+  private travLevel(x: BinNodePosi<T>, visit: Visit<T>) {
+    const q = new Queue<BinNodePosi<T>>()
+    q.enqueue(x)
+    while (!q.empty()) {
+      x = q.dequeue()
+      // @ts-ignore
+      visit(x?.getData())
+      if (x?.hasRChild()) q.enqueue(x?.getLC())
+      if (x?.hasRChild()) q.enqueue(x?.getRC())
+    }
   }
 
   //----------------查询相关------------
