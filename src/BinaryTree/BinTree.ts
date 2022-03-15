@@ -132,9 +132,9 @@ export class BinTree<T> {
   //中序遍历-递归
   private travIn_R(x: BinNodePosi<T>, visit: Visit<T>) {
     if (!x) return
-    this.travPre_R(x.getLC(), visit)
+    this.travIn_R(x.getLC(), visit)
     visit(x.getData())
-    this.travPre_R(x.getRC(), visit)
+    this.travIn_R(x.getRC(), visit)
   }
 
   //中序迭代-迭代1
@@ -194,6 +194,14 @@ export class BinTree<T> {
         }
       }
     }
+  }
+
+  //后序遍历-递归
+  private travPost_R(x: BinNodePosi<T>, visit: Visit<T>) {
+    if (!x) return
+    this.travPost_R(x.getLC(), visit)
+    this.travPost_R(x.getRC(), visit)
+    visit(x.getData())
   }
 
   //----------------查询相关------------
